@@ -1,0 +1,32 @@
+{
+  "name": "wiredoverview",
+  "version": "0.1",
+  "description": "Get an overview and edit wired from an extension GUI",
+  "main": "src/main.ts",
+  "type": "module",
+  "scripts": {
+    "test": "ts-node src/main.ts -p 9092",
+    "start": "ts-node src/main.ts"
+  },
+  "keywords": [],
+  "author": "WiredSpast",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "chrome-launcher": "^0.15.1",
+    "gnode-api": "^0.2.9",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4",
+    "ws": "^8.8.1"
+  },
+  "pkg": {
+    "scripts": [
+      "index.js",
+      "node_modules/**/*.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.3"
+  }
+}
