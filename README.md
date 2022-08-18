@@ -9,3 +9,5 @@ Get an overview of all wired stacks in a room.
  - Room **admin**'s can open wired by clicking them from within the extension
 
 <img height="346" src="https://user-images.githubusercontent.com/74211155/185451693-de1b1ca4-f380-46e1-b9e5-9ad6a9a19e1a.png">
+
+NOTE: This extension uses a Chrome application window for its UI, you need to have Chrome installed!
