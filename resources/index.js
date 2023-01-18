@@ -174,7 +174,7 @@ document.addEventListener('contextmenu', function(e) {
 async function createImageBlob() {
   return new Promise((resolve, reject) => {
     if (getImageHeight() <= 0 ||getImageWidth() <= 0)
-      reject(new Error('No wired loaded in'));
+      reject(new Error('not_loaded_in'));
 
     const canvas = document.createElement('canvas');
     canvas.width = getImageWidth();
@@ -189,32 +189,36 @@ async function createImageBlob() {
     });
 
     canvas.toBlob((blob) => {
-      blob === null ? reject(new Error('Error making image blob')) : resolve(blob);
+      blob === null ? reject(new Error('null_blob')) : resolve(blob);
     });
   });
 }
 
 function copyImageToClipboard(button) {
-  createImageBlob().then(blob => {
-    const item = new ClipboardItem({ "image/png": blob });
-    window.navigator.clipboard.write([item]);
+  if (button.classList.length === 0) {
+    createImageBlob().then(blob => {
+      const item = new ClipboardItem({ "image/png": blob });
+      window.navigator.clipboard.write([item]);
+  
+      button.classList.add('success');
+  
+      setTimeout(() => {
+        button.classList.remove('success');
+      }, 2500);
+    }).catch(e => {
+      button.classList.add('error', e.message);
+  
+      setTimeout(() => {
+        button.classList.remove('error', e.message);
+      }, 2500);
+    });
+  }
+}
 
-    button.innerHTML = 'Copied!';
-    button.classList.add('success');
-
-    setTimeout(() => {
-      button.innerHTML = 'Copy image to clipboard';
-      button.classList.remove('success');
-    }, 2500);
-  }).catch(e => {
-    button.innerHTML = e.message;
-    button.classList.add('error');
-
-    setTimeout(() => {
-      button.innerHTML = 'Copy image to clipboard';
-      button.classList.remove('error');
-    }, 2500);
-  });
+function moveStack(button) {
+  if (button.classList.length === 0) {
+  
+  }
 }
 
 function getImageWidth() {

@@ -1,6 +1,6 @@
 {
   "name": "wiredoverview",
-  "version": "0.1",
+  "version": "0.1.1",
   "description": "Get an overview and edit wired from an extension GUI",
   "main": "src/main.ts",
   "type": "module",

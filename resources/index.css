@@ -163,12 +163,15 @@ body {
 .buttons {
     padding: 0;
     margin: 0;
+    gap: 2px;
+    background-color: #3c3f41;
 }
 
-#btnCopyToClipboard {
-    padding: 0;
+button {
     margin: 0;
-    height: 30px;
+    min-height: fit-content;
+    height: 100%;
+    padding: 5px;
     width: 100%;
     border-radius: 0;
     border: none;
@@ -178,20 +181,66 @@ body {
     transition: all 0.5s ease-in-out;
 }
 
-#btnCopyToClipboard:hover {
+button:hover {
     background-color: #324748;
 }
 
-#btnCopyToClipboard.error {
+button.error {
     background-color: #543434;
 }
 
-#btnCopyToClipboard.error,
-#btnCopyToClipboard.error:hover {
+button.error,
+button.error:hover {
     background-color: #543434;
 }
 
-#btnCopyToClipboard.success,
-#btnCopyToClipboard.success:hover {
+button.waiting,
+button.waiting:hover {
+    background-color: #544e34;
+}
+
+button.progress,
+button.progress:hover {
+    background-color: #603e1a;
+}
+
+button.success,
+button.success:hover {
     background-color: #3c5434;
+}
+
+#btnCopyToClipboard:after {
+    content: 'Copy image';
+}
+
+#btnCopyToClipboard.error.not_loaded_in:after {
+    content: 'No wired loaded in';
+}
+
+#btnCopyToClipboard.error.null_blob:after {
+    content: 'Error making blob';
+}
+
+#btnCopyToClipboard.success {
+    content: 'Copied!';
+}
+
+#btnMoveStack:after {
+    content: 'Move stack';
+}
+
+#btnMoveStack.waiting:after {
+    content: 'Select a tile';
+}
+
+#btnMoveStack.progress:after {
+    content: 'Moving stack';
+}
+
+#btnMoveStack.success:after {
+    content: 'Moved stack';
+}
+
+#btnMoveStack.error:after {
+    content: 'Timed out';
 }

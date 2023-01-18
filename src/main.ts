@@ -1,7 +1,6 @@
 import { readFile } from 'fs/promises';
 import { ExtensionInfo } from "gnode-api/lib/extension/extensioninfo";
 import WindowedExtension from "./window/windowedextension.js";
-import * as path from "path";
 import { FurniData } from "@/furnidata/furnidata.entity";
 import axios from 'axios';
 import { Wired, WiredData } from "@/furnidata/wireddata.entity";
@@ -19,7 +18,7 @@ const unknownWiredData: WiredData = {
   revision: 0
 }
 
-const ext = new WindowedExtension(extensionInfo, path.resolve('./resources/html/index.html'), '--window-size=300,350');
+const ext = new WindowedExtension(extensionInfo,'--window-size=300,350');
 ext.run();
 
 ext.on('connect', (host, connectionPort, hotelVersion, clientIdentifier, clientType) => {
@@ -47,6 +46,9 @@ ext.on('connect', (host, connectionPort, hotelVersion, clientIdentifier, clientT
       break;
     case 'game-it.habbo.com':
       fetchWiredData('www.habbo.it');
+      break;
+    case 'game-us.habbo.com':
+      fetchWiredData('www.habbo.com');
       break;
     case 'game-s2.habbo.com':
       fetchWiredData('sandbox.habbo.com');
@@ -108,12 +110,11 @@ ext.interceptByNameOrHash(HDirection.TOCLIENT, 'CloseConnection', onOpenOrCloseC
 let wiredMap = new Map<number, Wired>();
 
 function onObjects(hMessage: HMessage) {
+  let floorItems: HFloorItem[] = HFloorItem.parse(hMessage.getPacket());
   if (wiredData !== null) {
     ext.sendToUI(JSON.stringify({
       type: 'clear'
     }));
-
-    let floorItems: HFloorItem[] = HFloorItem.parse(hMessage.getPacket());
 
     let wireds: Wired[] = floorItems
       .map(item => ({ item, data: wiredData.get(item.typeId)}))
@@ -126,6 +127,12 @@ function onObjects(hMessage: HMessage) {
       type: 'addWired',
       wireds
     }));
+  }
+
+  for (let item of floorItems) {
+    if (item.id === 28141124) {
+      console.log(item.stuff);
+    }
   }
 }
 

@@ -5,6 +5,56 @@ import { WebSocketServer } from 'ws';
 import ChromeLauncher, { LaunchedChrome } from 'chrome-launcher';
 import { getRandomPort } from "chrome-launcher/dist/random-port.js";
 
+import http from 'http';
+import fs from 'fs';
+import path from 'path';
+
+const directoryName = path.resolve('./resources');
+console.log(directoryName);
+
+const uiServer = http.createServer((req, res) => {
+  console.log(req.url?.split('?')[0].split('.').pop());
+  switch (req.url?.split('?')[0].split('.').pop()) {
+    case 'html':
+      console.log('abc');
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      break;
+    case 'js':
+      res.writeHead(200, { 'Content-Type': 'text/js' });
+      break;
+    case 'css':
+      res.writeHead(200, { 'Content-Type': 'text/css' });
+      break;
+    case 'ico':
+      res.writeHead(200, { 'Content-Type': 'image/x-icon' });
+      break;
+    default:
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      break;
+  }
+
+  const filePath = path.join(directoryName, req.url?.split('?')[0].substring(1) || 'index.html');
+  console.log(filePath);
+
+  fs.readFile(filePath, null, (error, data) => {
+    if (error) {
+      res.writeHead(404);
+      res.write(`File not found`);
+    } else {
+      res.write(data);
+    }
+    res.end();
+  });
+});
+
+let serverPort: number;
+getRandomPort().then(port => {
+  uiServer.listen(port);
+  serverPort = port;
+  console.log(port);
+});
+
+
 export default class WindowedExtension extends Extension {
   private readonly extensionInfo: ExtensionInfo;
   private readonly htmlPath: string;
@@ -13,10 +63,9 @@ export default class WindowedExtension extends Extension {
   private windowPort: number;
   private chrome: LaunchedChrome | null = null;
 
-  constructor(extensionInfo: ExtensionInfo, htmlPath: string, ...chromeFlags: string[]) {
+  constructor(extensionInfo: ExtensionInfo, ...chromeFlags: string[]) {
     super(extensionInfo);
     this.extensionInfo = extensionInfo;
-    this.htmlPath = htmlPath;
     this.chromeFlags = chromeFlags;
     this.on('click', this.toggleWindow.bind(this));
 
@@ -51,7 +100,7 @@ export default class WindowedExtension extends Extension {
   async openWindow(): Promise<void> {
     if (!this.isWindowOpen()) {
       this.chrome = await ChromeLauncher.launch({
-        chromeFlags: [`--app=${this.htmlPath}?port=${this.windowPort}`, ...this.chromeFlags]
+        chromeFlags: [`--app=http://localhost:${serverPort}/index.html?port=${this.windowPort}`, ...this.chromeFlags]
       });
 
       if(this.chrome == null) {
