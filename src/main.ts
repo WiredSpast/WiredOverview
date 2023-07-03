@@ -69,7 +69,13 @@ function fetchWiredData(hotel: string) {
       furniData
         .roomitemtypes
         .furnitype
-        .filter(f => f.classname.startsWith('wf_act') || f.classname.startsWith('wf_trg') || f.classname.startsWith('wf_cnd') || f.classname.startsWith('wf_xtra'))
+        .filter(f =>
+            f.classname.startsWith('wf_act')
+              || f.classname.startsWith('wf_trg')
+              || f.classname.startsWith('wf_cnd')
+              || f.classname.startsWith('wf_xtra')
+              || f.classname.startsWith('wf_slc')
+        )
         .forEach(wired => wiredData.set(wired.id, wired));
     });
 }
